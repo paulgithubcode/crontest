@@ -1,0 +1,23 @@
+name: External Cron Trigger
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch data
+        run: |
+          curl -s https://api.coingecko.com/api/v3/ping > data.json
+
+      - name: Commit JSON
+        run: |
+          git config user.name "bot"
+          git config user.email "bot@example.com"
+          git add data.json
+          git commit -m "update data" || echo "no changes"
+          git push
